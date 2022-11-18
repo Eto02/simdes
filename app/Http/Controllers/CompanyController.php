@@ -18,7 +18,6 @@ class CompanyController extends Controller
 
     public function index()
     {
-        // dd(Hash::make('company123'));
         return view('pages.company.index');
     }
 
@@ -37,11 +36,12 @@ class CompanyController extends Controller
             $data[$i]['no'] = $i + 1;
             $data[$i]['name'] = $value->name;
             $data[$i]['email'] = $value->email;
-            $data[$i]['company'] = $value->mstrCompany['name'];
-            $data[$i]['address'] = $value->mstrCompany['address'];
-            $data[$i]['phone_number'] = $value->mstrCompany['phone_number'];
-            $data[$i]['logo'] = $value->mstrCompany['logo'];
-            $data[$i]['login_background'] = $value->mstrCompany['login_background'];
+            $data[$i]['company_id'] = $value->mstrCompany->company_id;
+            $data[$i]['company_name'] = $value->mstrCompany->name;
+            $data[$i]['address'] = $value->mstrCompany->address;
+            $data[$i]['phone_number'] = $value->mstrCompany->phone_number;
+            $data[$i]['logo'] = 'storage/'.$value->mstrCompany->logo;
+            $data[$i]['login_background'] = 'storage/'.$value->mstrCompany->login_background;
             $i++;
         }
 

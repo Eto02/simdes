@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property string $letter_type_id
+ * @property string $file_type_id
  * @property string $company_id
  * @property string $name
  * @property string $description
@@ -14,15 +14,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_by
  * @property string $updated_at
  * @property MstrCompany $mstrCompany
+ * @property TrServiceFile[] $trServiceFile
  */
-class MstrLetterType extends Model
+class MstrFileType extends Model
 {
     /**
      * The table associated with the model.
      * 
      * @var string
      */
-    protected $table = 'mstr_letter_type';
+    protected $table = 'mstr_file_type';
 
     public $timestamps = false;
 
@@ -31,7 +32,7 @@ class MstrLetterType extends Model
      * 
      * @var string
      */
-    protected $primaryKey = 'letter_type_id';
+    protected $primaryKey = 'file_type_id';
 
     /**
      * The "type" of the auto-incrementing ID.
@@ -58,5 +59,13 @@ class MstrLetterType extends Model
     public function mstrCompany()
     {
         return $this->belongsTo('App\Models\MstrCompany', 'company_id', 'company_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function trServiceFile()
+    {
+        return $this->hasMany('App\Models\TrServiceFile', 'file_type_id', 'file_type_id');
     }
 }

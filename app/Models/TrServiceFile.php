@@ -7,12 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property string $service_file_id
  * @property string $service_id
+ * @property string $file_type_id
  * @property string $file_name
  * @property string $file_location
  * @property string $created_by
  * @property string $created_at
  * @property string $updated_by
  * @property string $updated_at
+ * @property MstrFileType $mstrFileType
  * @property TrService $trService
  */
 class TrServiceFile extends Model
@@ -50,7 +52,15 @@ class TrServiceFile extends Model
     /**
      * @var array
      */
-    protected $fillable = ['service_id', 'file_name', 'file_location', 'created_by', 'created_at', 'updated_by', 'updated_at'];
+    protected $fillable = ['service_id', 'file_type_id', 'file_name', 'file_location', 'created_by', 'created_at', 'updated_by', 'updated_at'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function mstrFileType()
+    {
+        return $this->belongsTo('App\Models\MstrFileType', 'file_type_id', 'file_type_id');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

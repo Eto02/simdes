@@ -178,6 +178,7 @@
             },
             pageSize: 10
         });
+        
         $("#companyGrid").kendoGrid({
             dataSource: companyDataSource,
             columns: [
@@ -210,26 +211,30 @@
                 {
                     field: "phone_number",
                     title: "No. HP",
+                    width: 120,
                     headerAttributes: { style: "text-align: center" }
                 },
                 {
-                    field: "logo",
+                    template: function(data) {
+                        return '<div class="text-center"><a href="'+data.logo+'" target="_blank"><img src="'+data.logo+'" alt="Logo" width="60" height="60"></a></div>';
+                    },
                     title: "Logo",
                     headerAttributes: { style: "text-align: center" }
                 },
                 {
-                    field: "login_background",
-                    title: "Background Login",
+                    field: "",
+                    title: "Background",
                     headerAttributes: { style: "text-align: center" }
                 },
                 {
                     headerTemplate: "<span class='k-icon k-i-gear'></span>",
                     headerAttributes: { class: "table-header-cell", style: "text-align: center" },
                     attributes: { class: "table-cell", style: "text-align: center" },
-                    width: "170px",
+                    width: "100px",
                     command: [
                         {
                             name: "edit",
+                            className: "mb-1",
                             text: {
                                 edit: "Edit",
                                 update: "Simpan",
@@ -256,6 +261,32 @@
                 }
             ],
             edit: function (e) {
+                e.container.parent().find('.k-window-title').text(e.model.isNew() ? "Tambah Data" : "Edit Data");
+
+                var initUpload = function () {
+                    var validation = {};
+                    validation.allowedExtensions = ["png","jpg","jpeg"]
+                    $("#logo").kendoUpload({
+                        async: {
+                            saveUrl: "",
+                            autoUpload: false
+                        },
+                        multiple: false,
+                        validation: validation,
+                        dropZone: ".logoDropZoneElement",
+                    }).data("kendoUpload");
+
+                    $("#login_background").kendoUpload({
+                        async: {
+                            saveUrl: "",
+                            autoUpload: false
+                        },
+                        multiple: false,
+                        validation: validation,
+                        dropZone: ".loginBackgroundDropZoneElement",
+                    }).data("kendoUpload");
+                };
+                initUpload();
             },
             noRecords: true,
             sortable: true,

@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_by
  * @property string $updated_at
  * @property User $user
- * @property MstrLetterType[] $mstrLetterType
+ * @property MstrFileType[] $mstrFileType
  * @property MstrServiceType[] $mstrServiceType
  * @property TrService[] $trService
  */
@@ -63,15 +63,15 @@ class MstrCompany extends Model
      */
     public function users()
     {
-        return $this->belongsTo('App\Models\Users');
+        return $this->belongsTo('App\Models\Users', 'user_id', 'id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function mstrLetterType()
+    public function mstrFileType()
     {
-        return $this->hasMany('App\Models\MstrLetterType', 'company_id', 'company_id');
+        return $this->hasMany('App\Models\MstrFileType', 'company_id', 'company_id');
     }
 
     /**

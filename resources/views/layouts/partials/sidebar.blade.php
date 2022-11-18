@@ -12,7 +12,8 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="{{ asset('lte/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
+                {{-- <img src="{{ asset('lte/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image"> --}}
+                <img src="{{ route('view.logo') }}/{{ auth()->user()->id }}" class="img-circle elevation-2 p-1" alt="User Image">
             </div>
             <div class="info">
                 <a href="#" class="d-block">{{ auth()->user()->name }}</a>
@@ -39,7 +40,7 @@
 
             $companyActive = '';
             $serviceTypeActive = '';
-            $letterTypeActive = '';
+            $fileTypeActive = '';
 
             switch ($currentRoute) {
                 case route('dashboard'):
@@ -57,8 +58,8 @@
                 case route('service_type'):
                     $serviceTypeActive = 'active';
                     break;
-                case route('letter_type'):
-                    $letterTypeActive = 'active';
+                case route('file_type'):
+                    $fileTypeActive = 'active';
                     break;
                 default:
                     break;
@@ -78,7 +79,7 @@
                         </p>
                     </a>
                 </li>
-                {{-- @if (auth()->user()->roles[0]->name == 'company') --}}
+                @if (auth()->user()->roles[0]->name == 'company')
                 <li class="nav-item">
                     <a href="{{ route('service') }}" class="nav-link {{ $serviceActive }}">
                         <i class="nav-icon fas fa-edit"></i>
@@ -95,7 +96,7 @@
                         </p>
                     </a>
                 </li>
-                {{-- @endif --}}
+                @endif
                 {{-- <li class="nav-item menu-open">
                     <a href="#" class="nav-link active">
                         <i class="nav-icon fas fa-cog"></i>
@@ -126,7 +127,7 @@
                     </ul>
                 </li> --}}
                 <li class="nav-header">MASTER</li>
-                {{-- @if (auth()->user()->roles[0]->name == 'superadmin') --}}
+                @if (auth()->user()->roles[0]->name == 'superadmin')
                 <li class="nav-item">
                     <a href="{{ route('company') }}" class="nav-link {{ $companyActive }}">
                         <i class="nav-icon fas fa-building"></i>
@@ -135,8 +136,8 @@
                         </p>
                     </a>
                 </li>
-                {{-- @endif --}}
-                {{-- @if (auth()->user()->roles[0]->name == 'company') --}}
+                @endif
+                @if (auth()->user()->roles[0]->name == 'company')
                 <li class="nav-item">
                     <a href="{{ route('service_type') }}" class="nav-link {{ $serviceTypeActive }}">
                         <i class="nav-icon fas fa-list-ul"></i>
@@ -146,14 +147,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('letter_type') }}" class="nav-link {{ $letterTypeActive }}">
+                    <a href="{{ route('file_type') }}" class="nav-link {{ $fileTypeActive }}">
                         <i class="nav-icon fas fa-list-ul"></i>
                         <p>
-                            Jenis Surat
+                            Jenis Berkas
                         </p>
                     </a>
                 </li>
-                {{-- @endif --}}
+                @endif
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

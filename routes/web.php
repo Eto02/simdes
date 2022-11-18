@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\LetterTypeController;
+use App\Http\Controllers\DropdownController;
+use App\Http\Controllers\FileTypeController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ServiceFileController;
 use App\Http\Controllers\ServiceTypeController;
+use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -24,42 +27,66 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
+Route::controller(ViewController::class)->group(function () {
+    Route::get('view/logo/{id?}','logo')->name('view.logo');
+});
+
+Route::controller(DropdownController::class)->group(function () {
+    Route::get('dropdown/service_type','serviceType')->name('dropdown.service_type');
+    Route::get('dropdown/file_type','fileType')->name('dropdown.file_type');
+});
+
 Auth::routes(['register' => false]);
 
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::controller(ServiceController::class)->group(function () {
-    Route::get('service','index')->name('service');
-    Route::get('service/get_all','getAll')->name('service.getAll');
-    Route::post('service/store', 'store')->name('service.store');
-    Route::put('service/update/{id?}', 'update')->name('service.update');
-    Route::delete('service/destroy/{id?}', 'destroy')->name('service.destroy');
+Route::group(['middleware' => ['role:superadmin']], function () {
+
+    Route::controller(CompanyController::class)->group(function () {
+        Route::get('company','index')->name('company');
+        Route::get('company/get_all','getAll')->name('company.get_all');
+        Route::post('company/store', 'store')->name('company.store');
+        Route::put('company/update/{id?}', 'update')->name('company.update');
+        Route::delete('company/destroy/{id?}', 'destroy')->name('company.destroy');
+    });
 });
 
-Route::controller(ReportController::class)->group(function () {
-    Route::get('report','index')->name('report');
-});
+Route::group(['middleware' => ['role:company']], function () {
+    
+    Route::controller(ServiceController::class)->group(function () {
+        Route::get('service','index')->name('service');
+        Route::get('service/get_all','getAll')->name('service.get_all');
+        Route::post('service/store', 'store')->name('service.store');
+        Route::put('service/update/{id?}', 'update')->name('service.update');
+        Route::delete('service/destroy/{id?}', 'destroy')->name('service.destroy');
+    });
+    
+    Route::controller(ServiceFileController::class)->group(function () {
+        Route::get('service_file/get_all','getAll')->name('service_file.get_all');
+        Route::post('service_file/store', 'store')->name('service_file.store');
+        Route::put('service_file/update/{id?}', 'update')->name('service_file.update');
+        Route::delete('service_file/destroy/{id?}', 'destroy')->name('service_file.destroy');
 
-Route::controller(CompanyController::class)->group(function () {
-    Route::get('company','index')->name('company');
-    Route::get('company/get_all','getAll')->name('company.get_all');
-    Route::post('company/store', 'store')->name('company.store');
-    Route::put('company/update/{id?}', 'update')->name('company.update');
-    Route::delete('company/destroy/{id?}', 'destroy')->name('company.destroy');
-});
+        Route::post('service_file/upload', 'upload')->name('service_file.upload');
+    });
 
-Route::controller(ServiceTypeController::class)->group(function () {
-    Route::get('service_type','index')->name('service_type');
-    Route::get('service_type/get_all','getAll')->name('service_type.get_all');
-    Route::post('service_type/store', 'store')->name('service_type.store');
-    Route::put('service_type/update/{id?}', 'update')->name('service_type.update');
-    Route::delete('service_type/destroy/{id?}', 'destroy')->name('service_type.destroy');
-});
+    Route::controller(ReportController::class)->group(function () {
+        Route::get('report','index')->name('report');
+    });
 
-Route::controller(LetterTypeController::class)->group(function () {
-    Route::get('letter_type','index')->name('letter_type');
-    Route::get('letter_type/get_all','getAll')->name('letter_type.get_all');
-    Route::post('letter_type/store', 'store')->name('letter_type.store');
-    Route::put('letter_type/update/{id?}', 'update')->name('letter_type.update');
-    Route::delete('letter_type/destroy/{id?}', 'destroy')->name('letter_type.destroy');
+    Route::controller(ServiceTypeController::class)->group(function () {
+        Route::get('service_type','index')->name('service_type');
+        Route::get('service_type/get_all','getAll')->name('service_type.get_all');
+        Route::post('service_type/store', 'store')->name('service_type.store');
+        Route::put('service_type/update/{id?}', 'update')->name('service_type.update');
+        Route::delete('service_type/destroy/{id?}', 'destroy')->name('service_type.destroy');
+    });
+    
+    Route::controller(FileTypeController::class)->group(function () {
+        Route::get('file_type','index')->name('file_type');
+        Route::get('file_type/get_all','getAll')->name('file_type.get_all');
+        Route::post('file_type/store', 'store')->name('file_type.store');
+        Route::put('file_type/update/{id?}', 'update')->name('file_type.update');
+        Route::delete('file_type/destroy/{id?}', 'destroy')->name('file_type.destroy');
+    });
 });

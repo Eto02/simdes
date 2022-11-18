@@ -37,7 +37,7 @@ class Users extends Model
      */
     public function mstrCompany()
     {
-        return $this->belongsTo('App\Models\MstrCompany');
+        return $this->belongsTo('App\Models\MstrCompany', 'id', 'user_id');
     }
 
     /**

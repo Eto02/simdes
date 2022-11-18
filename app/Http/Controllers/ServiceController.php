@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MstrCompany;
+use App\Models\TrService;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -14,5 +16,117 @@ class ServiceController extends Controller
     public function index()
     {
         return view('pages.service.index');
+    }
+
+    public function getAll()
+    {
+        $company = MstrCompany::where('user_id',auth()->user()->id)->first();
+
+        $trService = TrService::with('mstrServiceType')
+        ->where('company_id',$company->company_id)
+        ->orderBy('created_at','ASC')
+        ->get();
+
+        $data = [];
+        $i = 0;
+
+        foreach ($trService as $key => $value) {
+            $data[$i]['no'] = $i + 1;
+            $data[$i]['service_id'] = $value->service_id;
+            $data[$i]['nik'] = $value->nik;
+            $data[$i]['name'] = $value->name;
+            $data[$i]['service_type_id'] = $value->service_type_id;
+            $data[$i]['service_type'] = $value->mstrServiceType->name;
+            $data[$i]['letter_number'] = $value->letter_number;
+            $data[$i]['serviced_by'] = $value->serviced_by;
+            $data[$i]['notes'] = $value->notes;
+            $i++;
+        }
+        return response()->json(['data' => $data, 'recordsTotal' => count($data), 'recordsFiltered' => count($data)]);
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $nik = $request->nik;
+            $name = $request->name;
+            $serviceTypeId = $request->service_type_id;
+            $letterNumber = $request->letter_number;
+            $servicedBy = $request->serviced_by;
+            $notes = $request->notes;
+
+            $company = MstrCompany::where('user_id',auth()->user()->id)->first();
+
+            TrService::create([
+                'company_id' => $company->company_id,
+                'nik' => $nik,
+                'name' => $name,
+                'service_type_id' => $serviceTypeId,
+                'letter_number' => $letterNumber,
+                'serviced_by' => $servicedBy,
+                'notes' => $notes,
+                'created_by' => auth()->user()->email
+            ]);
+
+            return response()->json([
+                'code' => 200,
+                'message' => 'Sukses disimpan'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'code' => 500,
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $nik = $request->nik;
+            $name = $request->name;
+            $serviceTypeId = $request->service_type_id;
+            $letterNumber = $request->letter_number;
+            $servicedBy = $request->serviced_by;
+            $notes = $request->notes;
+
+            TrService::where('service_id',$id)
+            ->update([
+                'nik' => $nik,
+                'name' => $name,
+                'service_type_id' => $serviceTypeId,
+                'letter_number' => $letterNumber,
+                'serviced_by' => $servicedBy,
+                'notes' => $notes,
+                'updated_by' => auth()->user()->email
+            ]);
+
+            return response()->json([
+                'code' => 200,
+                'message' => 'Sukses diubah'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'code' => 500,
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            TrService::where('service_id',$id)->delete();
+
+            return response()->json([
+                'code' => 200,
+                'message' => 'Sukses dihapus'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'code' => 500,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 }

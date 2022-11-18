@@ -138,11 +138,17 @@
             </a>
         </li> --}}
 
-        <li class="nav-item">
+        <li class="nav-item d-none d-sm-inline-block">
             <a class="nav-link" href="#" role="button" data-toggle="modal" data-target="#logout-modal">
-                <i class="fas fa-th-large"></i>
+                Sign Out
             </a>
         </li>
+
+        {{-- <li class="nav-item">
+            <a class="nav-link" href="#" role="button" data-toggle="modal" data-target="#logout-modal">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </a>
+        </li> --}}
     </ul>
 </nav>
 <!-- /.navbar -->

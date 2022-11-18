@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Jenis Layanan</h1>
+                <h1 class="m-0">Jenis Berkas</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -23,7 +23,7 @@
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
-        <div id="serviceTypeGrid"></div>
+        <div id="fileTypeGrid"></div>
     </div>
     <!-- /.container-fluid -->
 </section>
@@ -32,7 +32,7 @@
 <div id="deleteDialog"></div>
 
 <script type="text/x-kendo-template" id="deleteTemplateDialog">
-    Anda yakin ingin menghapus jenis layanan <strong>#= name #</strong>?
+    Anda yakin ingin menghapus jenis surat <strong>#= name #</strong>?
 </script>
 
 <script type="text/x-kendo-template" id="editPopupTemplate">
@@ -59,11 +59,11 @@
     $(function () {
         deleteTemplateDialog = kendo.template($("#deleteTemplateDialog").html());
 
-        var serviceTypeDataSource = new kendo.data.DataSource({
+        var fileTypeDataSource = new kendo.data.DataSource({
             transport: {
                 read: function (options) {
                     $.ajax({
-                        url: "{{ route('service_type.get_all') }}",
+                        url: "{{ route('file_type.get_all') }}",
                         type: "GET",
                         success: function (res) {
                             console.log(res);
@@ -76,7 +76,7 @@
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
                         },
-                        url: "{{ route('service_type.store') }}",
+                        url: "{{ route('file_type.store') }}",
                         type: "POST",
                         data: options.data,
                         dataType: "json",
@@ -84,7 +84,7 @@
                             options.success(res);
                         },
                         complete: function (e) {
-                            $("#serviceTypeGrid").data("kendoGrid").dataSource.read();
+                            $("#fileTypeGrid").data("kendoGrid").dataSource.read();
                         }
                     });
                 },
@@ -93,7 +93,7 @@
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
                         },
-                        url: "{{ route('service_type.update') }}/"+options.data.service_type_id,
+                        url: "{{ route('file_type.update') }}/"+options.data.file_type_id,
                         type: "PUT",
                         data: options.data,
                         dataType: "json",
@@ -101,7 +101,7 @@
                             options.success(res);
                         },
                         complete: function (e) {
-                            $("#serviceTypeGrid").data("kendoGrid").dataSource.read();
+                            $("#fileTypeGrid").data("kendoGrid").dataSource.read();
                         }
                     });
                 }
@@ -116,8 +116,8 @@
             pageSize: 10
         });
         
-        $("#serviceTypeGrid").kendoGrid({
-            dataSource: serviceTypeDataSource,
+        $("#fileTypeGrid").kendoGrid({
+            dataSource: fileTypeDataSource,
             columns: [
                 {
                     field: "no",
@@ -203,11 +203,11 @@
                                 headers: {
                                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
                                 },
-                                url: "{{ route('service_type.destroy') }}/"+data.service_type_id,
+                                url: "{{ route('file_type.destroy') }}/"+data.file_type_id,
                                 type: "DELETE",
                                 dataType: "json",
                                 success: function (status) {
-                                    $("#serviceTypeGrid").data("kendoGrid").dataSource.read();
+                                    $("#fileTypeGrid").data("kendoGrid").dataSource.read();
                                 }
                             });
                         }

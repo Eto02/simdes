@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MstrLetterType;
+use App\Models\MstrCompany;
+use App\Models\MstrFileType;
 use Illuminate\Http\Request;
 
-class LetterTypeController extends Controller
+class FileTypeController extends Controller
 {
     public function __construct()
     {
@@ -14,13 +15,28 @@ class LetterTypeController extends Controller
 
     public function index()
     {
-        return view('pages.letter_type.index');
+        return view('pages.file_type.index');
     }
 
-    public function getAll(Request $request)
+    public function getAll()
     {
-        $mstrLetterType = MstrLetterType::all();
-        return response()->json($mstrLetterType);
+        $company = MstrCompany::where('user_id',auth()->user()->id)->first();
+
+        $mstrFileType = MstrFileType::where('company_id',$company->company_id)
+        ->orderBy('created_at','ASC')
+        ->get();
+
+        $data = [];
+        $i = 0;
+
+        foreach ($mstrFileType as $key => $value) {
+            $data[$i]['no'] = $i + 1;
+            $data[$i]['file_type_id'] = $value->file_type_id;
+            $data[$i]['name'] = $value->name;
+            $data[$i]['description'] = $value->description;
+            $i++;
+        }
+        return response()->json(['data' => $data, 'recordsTotal' => count($data), 'recordsFiltered' => count($data)]);
     }
 
     public function store(Request $request)
@@ -29,11 +45,13 @@ class LetterTypeController extends Controller
             $name = $request->name;
             $description = $request->description;
 
-            MstrLetterType::create([
-                'company_id' => auth()->user()->company->company_id,
+            $company = MstrCompany::where('user_id',auth()->user()->id)->first();
+
+            MstrFileType::create([
+                'company_id' => $company->company_id,
                 'name' => $name,
                 'description' => $description,
-                'modified_by' => auth()->user()->email
+                'created_by' => auth()->user()->email
             ]);
 
             return response()->json([
@@ -54,11 +72,11 @@ class LetterTypeController extends Controller
             $name = $request->name;
             $description = $request->description;
 
-            MstrLetterType::where('letter_type_id',$id)
+            MstrFileType::where('file_type_id',$id)
             ->update([
                 'name' => $name,
                 'description' => $description,
-                'modified_by' => auth()->user()->email
+                'updated_by' => auth()->user()->email
             ]);
 
             return response()->json([
@@ -76,7 +94,7 @@ class LetterTypeController extends Controller
     public function destroy($id)
     {
         try {
-            MstrLetterType::where('letter_type_id',$id)->delete();
+            MstrFileType::where('file_type_id',$id)->delete();
 
             return response()->json([
                 'code' => 200,

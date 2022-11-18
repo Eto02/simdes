@@ -43,15 +43,15 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::group(['middleware' => ['role:superadmin']], function () {
 
     Route::controller(CompanyController::class)->group(function () {
-        Route::get('company','index')->name('company');
-        Route::get('company/get_all','getAll')->name('company.get_all');
-        Route::post('company/store', 'store')->name('company.store');
-        Route::put('company/update/{id?}', 'update')->name('company.update');
-        Route::delete('company/destroy/{id?}', 'destroy')->name('company.destroy');
+        Route::get('employee','index')->name('employee');
+        Route::get('employee/get_all','getAll')->name('employee.get_all');
+        Route::post('employee/store', 'store')->name('employee.store');
+        Route::put('employee/update/{id?}', 'update')->name('employee.update');
+        Route::delete('employee/destroy/{id?}', 'destroy')->name('employee.destroy');
     });
 });
 
-Route::group(['middleware' => ['role:company']], function () {
+Route::group(['middleware' => ['role:employee']], function () {
     
     Route::controller(ServiceController::class)->group(function () {
         Route::get('service','index')->name('service');

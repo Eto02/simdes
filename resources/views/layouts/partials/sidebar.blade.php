@@ -38,7 +38,7 @@
             $serviceActive = '';
             $reportActive = '';
 
-            $companyActive = '';
+            $employeeActive = '';
             $serviceTypeActive = '';
             $fileTypeActive = '';
 
@@ -52,8 +52,8 @@
                 case route('report'):
                     $reportActive = 'active';
                     break;
-                case route('company'):
-                    $companyActive = 'active';
+                case route('employee'):
+                    $employeeActive = 'active';
                     break;
                 case route('service_type'):
                     $serviceTypeActive = 'active';
@@ -79,7 +79,7 @@
                         </p>
                     </a>
                 </li>
-                @if (auth()->user()->roles[0]->name == 'company')
+                @if (auth()->user()->roles[0]->name == 'employee')
                 <li class="nav-item">
                     <a href="{{ route('service') }}" class="nav-link {{ $serviceActive }}">
                         <i class="nav-icon fas fa-edit"></i>
@@ -129,7 +129,7 @@
                 <li class="nav-header">MASTER</li>
                 @if (auth()->user()->roles[0]->name == 'superadmin')
                 <li class="nav-item">
-                    <a href="{{ route('company') }}" class="nav-link {{ $companyActive }}">
+                    <a href="{{ route('employee') }}" class="nav-link {{ $employeeActive }}">
                         <i class="nav-icon fas fa-building"></i>
                         <p>
                             Company
@@ -137,7 +137,7 @@
                     </a>
                 </li>
                 @endif
-                @if (auth()->user()->roles[0]->name == 'company')
+                @if (auth()->user()->roles[0]->name == 'employee')
                 <li class="nav-item">
                     <a href="{{ route('service_type') }}" class="nav-link {{ $serviceTypeActive }}">
                         <i class="nav-icon fas fa-list-ul"></i>

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MstrCompany;
+use App\Models\MstrEmployee;
 use App\Models\MstrFileType;
 use Illuminate\Http\Request;
 
@@ -20,9 +20,9 @@ class FileTypeController extends Controller
 
     public function getAll()
     {
-        $company = MstrCompany::where('user_id',auth()->user()->id)->first();
+        $employee = MstrEmployee::where('user_id',auth()->user()->id)->first();
 
-        $mstrFileType = MstrFileType::where('company_id',$company->company_id)
+        $mstrFileType = MstrFileType::where('employee_id',$employee->employee_id)
         ->orderBy('created_at','ASC')
         ->get();
 
@@ -45,10 +45,10 @@ class FileTypeController extends Controller
             $name = $request->name;
             $description = $request->description;
 
-            $company = MstrCompany::where('user_id',auth()->user()->id)->first();
+            $employee = MstrEmployee::where('user_id',auth()->user()->id)->first();
 
             MstrFileType::create([
-                'company_id' => $company->company_id,
+                'employee_id' => $employee->employee_id,
                 'name' => $name,
                 'description' => $description,
                 'created_by' => auth()->user()->email

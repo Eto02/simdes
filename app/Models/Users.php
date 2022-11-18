@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $remember_token
  * @property string $created_at
  * @property string $updated_at
- * @property MstrCompany[] $mstrCompany
+ * @property MstrEmployee[] $mstrEmployee
  * @property ModelHasRoles[] $modelHasRoles
  */
 class Users extends Model
@@ -35,17 +35,17 @@ class Users extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function mstrCompany()
+    public function mstrEmployee()
     {
-        return $this->belongsTo('App\Models\MstrCompany', 'id', 'user_id');
+        return $this->belongsTo('App\Models\MstrEmployee', 'id', 'user_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    // public function mstrCompany()
+    // public function mstrEmployee()
     // {
-    //     return $this->hasMany('App\Models\MstrCompany');
+    //     return $this->hasMany('App\Models\MstrEmployee');
     // }
 
     /**

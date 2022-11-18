@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property string $company_id
+ * @property string $employee_id
  * @property integer $user_id
  * @property string $name
  * @property string $address
@@ -21,14 +21,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property MstrServiceType[] $mstrServiceType
  * @property TrService[] $trService
  */
-class MstrCompany extends Model
+class MstrEmployee extends Model
 {
     /**
      * The table associated with the model.
      * 
      * @var string
      */
-    protected $table = 'mstr_company';
+    protected $table = 'mstr_employee';
 
     public $timestamps = false;
 
@@ -37,7 +37,7 @@ class MstrCompany extends Model
      * 
      * @var string
      */
-    protected $primaryKey = 'company_id';
+    protected $primaryKey = 'employee_id';
 
     /**
      * The "type" of the auto-incrementing ID.
@@ -71,7 +71,7 @@ class MstrCompany extends Model
      */
     public function mstrFileType()
     {
-        return $this->hasMany('App\Models\MstrFileType', 'company_id', 'company_id');
+        return $this->hasMany('App\Models\MstrFileType', 'employee_id', 'employee_id');
     }
 
     /**
@@ -79,7 +79,7 @@ class MstrCompany extends Model
      */
     public function mstrServiceType()
     {
-        return $this->hasMany('App\Models\MstrServiceType', 'company_id', 'company_id');
+        return $this->hasMany('App\Models\MstrServiceType', 'employee_id', 'employee_id');
     }
 
     /**
@@ -87,6 +87,6 @@ class MstrCompany extends Model
      */
     public function trService()
     {
-        return $this->hasMany('App\Models\TrService', 'company_id', 'company_id');
+        return $this->hasMany('App\Models\TrService', 'employee_id', 'employee_id');
     }
 }

@@ -11,7 +11,7 @@ class ServiceFileController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->serviceFilePath = 'company/service_file/';
+        $this->serviceFilePath = 'employee/service_file/';
     }
 
     public function getAll(Request $request)

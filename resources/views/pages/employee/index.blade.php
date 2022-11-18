@@ -23,7 +23,7 @@
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
-        <div id="companyGrid"></div>
+        <div id="employeeGrid"></div>
     </div>
     <!-- /.container-fluid -->
 </section>
@@ -32,7 +32,7 @@
 <div id="deleteDialog"></div>
 
 <script type="text/x-kendo-template" id="deleteTemplateDialog">
-    Anda yakin ingin menghapus company <strong>#= name #</strong>?
+    Anda yakin ingin menghapus employee <strong>#= name #</strong>?
 </script>
 
 <script type="text/x-kendo-template" id="editPopupTemplate">
@@ -61,11 +61,11 @@
     </div>
 
     <div class="k-edit-label">
-        <label for="company_name">Nama Company <i class="text-danger">*</i></label>
+        <label for="employee_name">Nama Company <i class="text-danger">*</i></label>
     </div>
-    <div data-container-for="company_name" class="k-edit-field">
-        <input type="text" class="k-input k-textbox" name="company_name" style="width: 100%" required="required" data-bind="value:company_name" validationMessage="Field tidak boleh kosong">
-        <span class="k-invalid-msg" data-for="company_name"></span>
+    <div data-container-for="employee_name" class="k-edit-field">
+        <input type="text" class="k-input k-textbox" name="employee_name" style="width: 100%" required="required" data-bind="value:employee_name" validationMessage="Field tidak boleh kosong">
+        <span class="k-invalid-msg" data-for="employee_name"></span>
     </div>
 
     <div class="k-edit-label">
@@ -121,11 +121,11 @@
     $(function () {
         deleteTemplateDialog = kendo.template($("#deleteTemplateDialog").html());
 
-        var companyDataSource = new kendo.data.DataSource({
+        var employeeDataSource = new kendo.data.DataSource({
             transport: {
                 read: function (options) {
                     $.ajax({
-                        url: "{{ route('company.get_all') }}",
+                        url: "{{ route('employee.get_all') }}",
                         type: "GET",
                         success: function (res) {
                             console.log(res);
@@ -138,7 +138,7 @@
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
                         },
-                        url: "{{ route('company.store') }}",
+                        url: "{{ route('employee.store') }}",
                         type: "POST",
                         data: options.data,
                         dataType: "json",
@@ -147,7 +147,7 @@
                             options.success(res);
                         },
                         complete: function (e) {
-                            $("#companyGrid").data("kendoGrid").dataSource.read();
+                            $("#employeeGrid").data("kendoGrid").dataSource.read();
                         }
                     });
                 },
@@ -156,7 +156,7 @@
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
                         },
-                        url: "{{ route('company.update') }}/"+options.data.Company_Id,
+                        url: "{{ route('employee.update') }}/"+options.data.employee_id,
                         type: "PUT",
                         data: options.data,
                         dataType: "json",
@@ -164,7 +164,7 @@
                             options.success(res);
                         },
                         complete: function (e) {
-                            $("#companyGrid").data("kendoGrid").dataSource.read();
+                            $("#employeeGrid").data("kendoGrid").dataSource.read();
                         }
                     });
                 }
@@ -173,14 +173,14 @@
                 data: "data",
                 total: "recordsTotal",
                 model: {
-                    id: "Company_Id",
+                    id: "employee_id",
                 },
             },
             pageSize: 10
         });
         
-        $("#companyGrid").kendoGrid({
-            dataSource: companyDataSource,
+        $("#employeeGrid").kendoGrid({
+            dataSource: employeeDataSource,
             columns: [
                 {
                     field: "no",
@@ -199,7 +199,7 @@
                     headerAttributes: { style: "text-align: center" }
                 },
                 {
-                    field: "company_name",
+                    field: "employee_name",
                     title: "Company",
                     headerAttributes: { style: "text-align: center" }
                 },
@@ -320,11 +320,11 @@
                                 headers: {
                                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
                                 },
-                                url: "{{ route('company.destroy') }}/"+data.Company_Id,
+                                url: "{{ route('employee.destroy') }}/"+data.employee_id,
                                 type: "DELETE",
                                 dataType: "json",
                                 success: function (status) {
-                                    $("#companyGrid").data("kendoGrid").dataSource.read();
+                                    $("#employeeGrid").data("kendoGrid").dataSource.read();
                                 }
                             });
                         }

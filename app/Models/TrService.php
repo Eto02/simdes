@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string $service_id
- * @property string $company_id
+ * @property string $employee_id
  * @property string $service_type_id
  * @property string $nik
  * @property string $name
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_by
  * @property string $updated_at
  * @property MstrServiceType $mstrServiceType
- * @property MstrCompany $mstrCompany
+ * @property MstrEmployee $mstrEmployee
  * @property TrServiceFile[] $trServiceFile
  */
 class TrService extends Model
@@ -56,7 +56,7 @@ class TrService extends Model
     /**
      * @var array
      */
-    protected $fillable = ['company_id', 'service_type_id', 'nik', 'name', 'letter_number', 'serviced_by', 'notes', 'created_by', 'created_at', 'updated_by', 'updated_at'];
+    protected $fillable = ['employee_id', 'service_type_id', 'nik', 'name', 'letter_number', 'serviced_by', 'notes', 'created_by', 'created_at', 'updated_by', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -69,9 +69,9 @@ class TrService extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function mstrCompany()
+    public function mstrEmployee()
     {
-        return $this->belongsTo('App\Models\MstrCompany', 'company_id', 'company_id');
+        return $this->belongsTo('App\Models\MstrEmployee', 'employee_id', 'employee_id');
     }
 
     /**

@@ -78,9 +78,9 @@ REPLACE INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 	(2, 'App\\Models\\User', 2),
 	(2, 'App\\Models\\User', 3);
 
--- Dumping structure for table simdes.mstr_company
-CREATE TABLE IF NOT EXISTS `mstr_company` (
-  `company_id` varchar(255) NOT NULL DEFAULT uuid(),
+-- Dumping structure for table simdes.mstr_employee
+CREATE TABLE IF NOT EXISTS `mstr_employee` (
+  `employee_id` varchar(255) NOT NULL DEFAULT (UUID()),
   `user_id` bigint(20) unsigned NOT NULL,
   `name` varchar(255) NOT NULL,
   `address` text NOT NULL,
@@ -91,20 +91,20 @@ CREATE TABLE IF NOT EXISTS `mstr_company` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_by` varchar(50) DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
-  PRIMARY KEY (`company_id`),
+  PRIMARY KEY (`employee_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `FK_mstr_company_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK_mstr_employee_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table simdes.mstr_company: ~2 rows (approximately)
-REPLACE INTO `mstr_company` (`company_id`, `user_id`, `name`, `address`, `phone_number`, `logo`, `login_background`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
+-- Dumping data for table simdes.mstr_employee: ~2 rows (approximately)
+REPLACE INTO `mstr_employee` (`employee_id`, `user_id`, `name`, `address`, `phone_number`, `logo`, `login_background`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
 	('4d30cb5b-6023-11ed-90eb-a81e84c072fd', 2, 'Company 1', 'Jl. Pattimura No.20, Lumajang, Jawa Timur', '081222333444', 'company/logo/20221109183900_logo.png', 'company/login_background/20221109183900_loginbg.png', 'superadmin@simdes.com', '2022-11-09 11:40:18', NULL, NULL),
 	('94b8ba7d-6023-11ed-90eb-a81e84c072fd', 3, 'Company 2', 'Jl. Ir. Soekarno No.25, Lumajang, Jawa Timur', '081222333555', 'company/logo/20221109184100_logo.png', 'company/login_background/20221109184100_loginbg.png', 'superadmin@simdes.com', '2022-11-09 11:42:19', NULL, NULL);
 
 -- Dumping structure for table simdes.mstr_file_type
 CREATE TABLE IF NOT EXISTS `mstr_file_type` (
-  `file_type_id` varchar(255) NOT NULL DEFAULT uuid(),
-  `company_id` varchar(255) NOT NULL,
+  `file_type_id` varchar(255) NOT NULL DEFAULT (UUID()),
+  `employee_id` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `created_by` varchar(50) NOT NULL,
@@ -112,20 +112,20 @@ CREATE TABLE IF NOT EXISTS `mstr_file_type` (
   `updated_by` varchar(50) DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   PRIMARY KEY (`file_type_id`) USING BTREE,
-  KEY `company_id` (`company_id`),
-  CONSTRAINT `FK_mstr_letter_type_mstr_company` FOREIGN KEY (`company_id`) REFERENCES `mstr_company` (`company_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `employee_id` (`employee_id`),
+  CONSTRAINT `FK_mstr_letter_type_mstr_employee` FOREIGN KEY (`employee_id`) REFERENCES `mstr_employee` (`employee_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table simdes.mstr_file_type: ~2 rows (approximately)
-REPLACE INTO `mstr_file_type` (`file_type_id`, `company_id`, `name`, `description`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
+REPLACE INTO `mstr_file_type` (`file_type_id`, `employee_id`, `name`, `description`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
 	('9e005c4c-6415-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', 'Surat Keputusan', 'Ini adalah contoh deskripsi surat keputusan.', 'company1@simdes.com', '2022-11-14 12:12:23', NULL, NULL),
 	('a4853a21-6415-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', 'Surat Dinas', 'Ini adalah contoh deskripsi surat dinas.', 'company1@simdes.com', '2022-11-14 12:12:34', NULL, NULL),
 	('f5d893cb-648c-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', 'Surat Lamaran Kerja', 'Ini adalah contoh deskripsi surat lamaran kerja.', 'company1@simdes.com', '2022-11-15 02:26:32', NULL, NULL);
 
 -- Dumping structure for table simdes.mstr_service_type
 CREATE TABLE IF NOT EXISTS `mstr_service_type` (
-  `service_type_id` varchar(255) NOT NULL DEFAULT uuid(),
-  `company_id` varchar(255) NOT NULL,
+  `service_type_id` varchar(255) NOT NULL DEFAULT (UUID()),
+  `employee_id` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `created_by` varchar(50) NOT NULL,
@@ -133,12 +133,12 @@ CREATE TABLE IF NOT EXISTS `mstr_service_type` (
   `updated_by` varchar(50) DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   PRIMARY KEY (`service_type_id`),
-  KEY `company_id` (`company_id`),
-  CONSTRAINT `FK_mstr_service_type_mstr_company` FOREIGN KEY (`company_id`) REFERENCES `mstr_company` (`company_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `employee_id` (`employee_id`),
+  CONSTRAINT `FK_mstr_service_type_mstr_employee` FOREIGN KEY (`employee_id`) REFERENCES `mstr_employee` (`employee_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table simdes.mstr_service_type: ~2 rows (approximately)
-REPLACE INTO `mstr_service_type` (`service_type_id`, `company_id`, `name`, `description`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
+REPLACE INTO `mstr_service_type` (`service_type_id`, `employee_id`, `name`, `description`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
 	('0ebc0ce7-641f-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', 'Perubahan Data Kartu Keluarga', 'Ini adalah contoh deskripsi perubahan data kartu keluarga.', 'company1@simdes.com', '2022-11-14 13:19:58', NULL, NULL),
 	('c6255a04-641e-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', 'Pembuatan KTP', 'Ini adalah contoh deskripsi pembuatan ktp.', 'company1@simdes.com', '2022-11-14 13:17:56', NULL, NULL),
 	('d576b6b5-641e-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', 'Lapor Pemerintah Desa', 'Ini adalah contoh deskripsi lapor pemerintah desa.', 'company1@simdes.com', '2022-11-14 13:18:22', NULL, NULL);
@@ -214,8 +214,8 @@ CREATE TABLE IF NOT EXISTS `role_has_permissions` (
 
 -- Dumping structure for table simdes.tr_service
 CREATE TABLE IF NOT EXISTS `tr_service` (
-  `service_id` varchar(255) NOT NULL DEFAULT uuid(),
-  `company_id` varchar(255) NOT NULL,
+  `service_id` varchar(255) NOT NULL DEFAULT (UUID()),
+  `employee_id` varchar(255) NOT NULL,
   `nik` varchar(16) NOT NULL,
   `name` varchar(255) NOT NULL,
   `service_type_id` varchar(255) NOT NULL,
@@ -227,20 +227,20 @@ CREATE TABLE IF NOT EXISTS `tr_service` (
   `updated_by` varchar(50) DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   PRIMARY KEY (`service_id`),
-  KEY `company_id` (`company_id`),
+  KEY `employee_id` (`employee_id`),
   KEY `service_type_id` (`service_type_id`),
-  CONSTRAINT `FK_tr_service_mstr_company` FOREIGN KEY (`company_id`) REFERENCES `mstr_company` (`company_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_tr_service_mstr_employee` FOREIGN KEY (`employee_id`) REFERENCES `mstr_employee` (`employee_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_tr_service_mstr_service_type` FOREIGN KEY (`service_type_id`) REFERENCES `mstr_service_type` (`service_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table simdes.tr_service: ~2 rows (approximately)
-REPLACE INTO `tr_service` (`service_id`, `company_id`, `nik`, `name`, `service_type_id`, `letter_number`, `serviced_by`, `notes`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
+REPLACE INTO `tr_service` (`service_id`, `employee_id`, `nik`, `name`, `service_type_id`, `letter_number`, `serviced_by`, `notes`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
 	('ba3056aa-6431-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', '12345678', 'Andri Fanky', 'c6255a04-641e-11ed-8526-a81e84c072fd', 'SR-001-14/11/2022', 'Tahta', 'Ini adalah contoh catatan layanan.', 'company1@simdes.com', '2022-11-14 15:33:37', NULL, NULL),
 	('d3cbceb7-6431-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', '12345679', 'Kurniawan', 'd576b6b5-641e-11ed-8526-a81e84c072fd', 'SR-002-14/11/2022', 'Tahta', 'Ini adalah contoh catatan layanan.', 'company1@simdes.com', '2022-11-14 15:34:20', NULL, NULL);
 
 -- Dumping structure for table simdes.tr_service_file
 CREATE TABLE IF NOT EXISTS `tr_service_file` (
-  `service_file_id` varchar(255) NOT NULL DEFAULT uuid(),
+  `service_file_id` varchar(255) NOT NULL DEFAULT (UUID()),
   `service_id` varchar(255) NOT NULL,
   `file_type_id` varchar(255) NOT NULL,
   `file_name` varchar(255) NOT NULL,

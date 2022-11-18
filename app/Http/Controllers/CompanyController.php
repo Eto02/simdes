@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MstrCompany;
+use App\Models\MstrEmployee;
 use App\Models\Users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -12,20 +12,20 @@ class CompanyController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->logoPath = 'company/logo/';
-        $this->loginBgPath = 'company/login_background/';
+        $this->logoPath = 'employee/logo/';
+        $this->loginBgPath = 'employee/login_background/';
     }
 
     public function index()
     {
-        return view('pages.company.index');
+        return view('pages.employee.index');
     }
 
     public function getAll()
     {
-        $users = Users::with('mstrCompany','modelHasRoles.roles')
+        $users = Users::with('mstrEmployee','modelHasRoles.roles')
         ->whereHas('modelHasRoles.roles', function ($query) {
-            $query->where('name','company');
+            $query->where('name','employee');
         })
         ->get();
 
@@ -36,12 +36,12 @@ class CompanyController extends Controller
             $data[$i]['no'] = $i + 1;
             $data[$i]['name'] = $value->name;
             $data[$i]['email'] = $value->email;
-            $data[$i]['company_id'] = $value->mstrCompany->company_id;
-            $data[$i]['company_name'] = $value->mstrCompany->name;
-            $data[$i]['address'] = $value->mstrCompany->address;
-            $data[$i]['phone_number'] = $value->mstrCompany->phone_number;
-            $data[$i]['logo'] = 'storage/'.$value->mstrCompany->logo;
-            $data[$i]['login_background'] = 'storage/'.$value->mstrCompany->login_background;
+            $data[$i]['employee_id'] = $value->mstrEmployee->employee_id;
+            $data[$i]['employee_name'] = $value->mstrEmployee->name;
+            $data[$i]['address'] = $value->mstrEmployee->address;
+            $data[$i]['phone_number'] = $value->mstrEmployee->phone_number;
+            $data[$i]['logo'] = 'storage/'.$value->mstrEmployee->logo;
+            $data[$i]['login_background'] = 'storage/'.$value->mstrEmployee->login_background;
             $i++;
         }
 
@@ -56,8 +56,8 @@ class CompanyController extends Controller
             $email = $request->email;
             $password = $request->password;
 
-            // For table mstr_company
-            $companyName = $request->company_name;
+            // For table mstr_employee
+            $employeeName = $request->employee_name;
             $address = $request->address;
             $phoneNumber = $request->phone_number;
             $logo = $request->file('logo');
@@ -71,15 +71,15 @@ class CompanyController extends Controller
                 'created_at' => date('Y-m-d H:i:s')
             ]);
 
-            // Insert mstr_company
+            // Insert mstr_employee
             $logoFilename = date('YmdHis').'_'.$logo->getClientOriginalName();
             $logo->storeAs('public/'.$this->logoPath, $logoFilename);
 
             $loginBackgroundFilename = date('YmdHis').'_'.$loginBackground->getClientOriginalName();
             $loginBackground->storeAs('public/'.$this->loginBgPath, $loginBackgroundFilename);
 
-            MstrCompany::create([
-                'name' => $companyName,
+            MstrEmployee::create([
+                'name' => $employeeName,
                 'address' => $address,
                 'phone_number' => $phoneNumber,
                 'logo' => $logoFilename,
@@ -107,8 +107,8 @@ class CompanyController extends Controller
             $email = $request->email;
             $password = $request->password;
 
-            // For table mstr_company
-            $companyName = $request->company_name;
+            // For table mstr_employee
+            $employeeName = $request->employee_name;
             $address = $request->address;
             $phoneNumber = $request->phone_number;
             $logo = $request->file('logo');
@@ -126,9 +126,9 @@ class CompanyController extends Controller
             Users::where('id',$id)
             ->update($usersFieldUpdate);
 
-            // Update mstr_company
-            $mstrCompanyFieldUpdate = [
-                'name' => $companyName,
+            // Update mstr_employee
+            $mstrEmployeeFieldUpdate = [
+                'name' => $employeeName,
                 'address' => $address,
                 'phone_number' => $phoneNumber,
                 'updated_by' => auth()->user()->email
@@ -137,17 +137,17 @@ class CompanyController extends Controller
                 $logoFilename = date('YmdHis').'_'.$logo->getClientOriginalName();
                 $logo->storeAs('public/'.$this->logoPath, $logoFilename);
 
-                $mstrCompanyFieldUpdate = array_merge($mstrCompanyFieldUpdate,['logo' => $logoFilename]);
+                $mstrEmployeeFieldUpdate = array_merge($mstrEmployeeFieldUpdate,['logo' => $logoFilename]);
             }
             if ($loginBackground) {
                 $loginBackgroundFilename = date('YmdHis').'_'.$loginBackground->getClientOriginalName();
                 $loginBackground->storeAs('public/'.$this->loginBgPath, $loginBackgroundFilename);
 
-                $mstrCompanyFieldUpdate = array_merge($mstrCompanyFieldUpdate,['login_background' => $loginBackgroundFilename]);
+                $mstrEmployeeFieldUpdate = array_merge($mstrEmployeeFieldUpdate,['login_background' => $loginBackgroundFilename]);
             }
 
-            MstrCompany::where('user_id',$id)
-            ->update($mstrCompanyFieldUpdate);
+            MstrEmployee::where('user_id',$id)
+            ->update($mstrEmployeeFieldUpdate);
 
             return response()->json([
                 'code' => 200,
@@ -164,8 +164,8 @@ class CompanyController extends Controller
     public function destroy($id)
     {
         try {
-            // Delete mstr_company
-            MstrCompany::where('user_id',$id)->delete();
+            // Delete mstr_employee
+            MstrEmployee::where('user_id',$id)->delete();
             // Delete users
             Users::where('id',$id)->delete();
 

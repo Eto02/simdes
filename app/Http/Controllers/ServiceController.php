@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MstrCompany;
+use App\Models\MstrEmployee;
 use App\Models\TrService;
 use Illuminate\Http\Request;
 
@@ -20,10 +20,10 @@ class ServiceController extends Controller
 
     public function getAll()
     {
-        $company = MstrCompany::where('user_id',auth()->user()->id)->first();
+        $employee = MstrEmployee::where('user_id',auth()->user()->id)->first();
 
         $trService = TrService::with('mstrServiceType')
-        ->where('company_id',$company->company_id)
+        ->where('employee_id',$employee->employee_id)
         ->orderBy('created_at','ASC')
         ->get();
 
@@ -55,10 +55,10 @@ class ServiceController extends Controller
             $servicedBy = $request->serviced_by;
             $notes = $request->notes;
 
-            $company = MstrCompany::where('user_id',auth()->user()->id)->first();
+            $employee = MstrEmployee::where('user_id',auth()->user()->id)->first();
 
             TrService::create([
-                'company_id' => $company->company_id,
+                'employee_id' => $employee->employee_id,
                 'nik' => $nik,
                 'name' => $name,
                 'service_type_id' => $serviceTypeId,

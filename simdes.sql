@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table simdes.migrations: ~4 rows (approximately)
+-- Dumping data for table simdes.migrations: ~5 rows (approximately)
 REPLACE INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(1, '2014_10_12_000000_create_users_table', 1),
 	(2, '2014_10_12_100000_create_password_resets_table', 1),
@@ -80,7 +80,7 @@ REPLACE INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 
 -- Dumping structure for table simdes.mstr_employee
 CREATE TABLE IF NOT EXISTS `mstr_employee` (
-  `employee_id` varchar(255) NOT NULL DEFAULT (UUID()),
+  `employee_id` varchar(255) NOT NULL DEFAULT uuid(),
   `user_id` bigint(20) unsigned NOT NULL,
   `name` varchar(255) NOT NULL,
   `address` text NOT NULL,
@@ -103,7 +103,7 @@ REPLACE INTO `mstr_employee` (`employee_id`, `user_id`, `name`, `address`, `phon
 
 -- Dumping structure for table simdes.mstr_file_type
 CREATE TABLE IF NOT EXISTS `mstr_file_type` (
-  `file_type_id` varchar(255) NOT NULL DEFAULT (UUID()),
+  `file_type_id` varchar(255) NOT NULL DEFAULT uuid(),
   `employee_id` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `mstr_file_type` (
   CONSTRAINT `FK_mstr_letter_type_mstr_employee` FOREIGN KEY (`employee_id`) REFERENCES `mstr_employee` (`employee_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table simdes.mstr_file_type: ~2 rows (approximately)
+-- Dumping data for table simdes.mstr_file_type: ~3 rows (approximately)
 REPLACE INTO `mstr_file_type` (`file_type_id`, `employee_id`, `name`, `description`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
 	('9e005c4c-6415-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', 'Surat Keputusan', 'Ini adalah contoh deskripsi surat keputusan.', 'company1@simdes.com', '2022-11-14 12:12:23', NULL, NULL),
 	('a4853a21-6415-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', 'Surat Dinas', 'Ini adalah contoh deskripsi surat dinas.', 'company1@simdes.com', '2022-11-14 12:12:34', NULL, NULL),
@@ -124,7 +124,7 @@ REPLACE INTO `mstr_file_type` (`file_type_id`, `employee_id`, `name`, `descripti
 
 -- Dumping structure for table simdes.mstr_service_type
 CREATE TABLE IF NOT EXISTS `mstr_service_type` (
-  `service_type_id` varchar(255) NOT NULL DEFAULT (UUID()),
+  `service_type_id` varchar(255) NOT NULL DEFAULT uuid(),
   `employee_id` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `mstr_service_type` (
   CONSTRAINT `FK_mstr_service_type_mstr_employee` FOREIGN KEY (`employee_id`) REFERENCES `mstr_employee` (`employee_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table simdes.mstr_service_type: ~2 rows (approximately)
+-- Dumping data for table simdes.mstr_service_type: ~3 rows (approximately)
 REPLACE INTO `mstr_service_type` (`service_type_id`, `employee_id`, `name`, `description`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
 	('0ebc0ce7-641f-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', 'Perubahan Data Kartu Keluarga', 'Ini adalah contoh deskripsi perubahan data kartu keluarga.', 'company1@simdes.com', '2022-11-14 13:19:58', NULL, NULL),
 	('c6255a04-641e-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', 'Pembuatan KTP', 'Ini adalah contoh deskripsi pembuatan ktp.', 'company1@simdes.com', '2022-11-14 13:17:56', NULL, NULL),
@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
 -- Dumping data for table simdes.roles: ~2 rows (approximately)
 REPLACE INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
 	(1, 'superadmin', 'web', '2022-11-09 04:32:39', NULL),
-	(2, 'company', 'web', '2022-11-09 04:33:37', NULL);
+	(2, 'employee', 'web', '2022-11-09 04:33:37', NULL);
 
 -- Dumping structure for table simdes.role_has_permissions
 CREATE TABLE IF NOT EXISTS `role_has_permissions` (
@@ -214,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `role_has_permissions` (
 
 -- Dumping structure for table simdes.tr_service
 CREATE TABLE IF NOT EXISTS `tr_service` (
-  `service_id` varchar(255) NOT NULL DEFAULT (UUID()),
+  `service_id` varchar(255) NOT NULL DEFAULT uuid(),
   `employee_id` varchar(255) NOT NULL,
   `nik` varchar(16) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -240,7 +240,7 @@ REPLACE INTO `tr_service` (`service_id`, `employee_id`, `nik`, `name`, `service_
 
 -- Dumping structure for table simdes.tr_service_file
 CREATE TABLE IF NOT EXISTS `tr_service_file` (
-  `service_file_id` varchar(255) NOT NULL DEFAULT (UUID()),
+  `service_file_id` varchar(255) NOT NULL DEFAULT uuid(),
   `service_id` varchar(255) NOT NULL,
   `file_type_id` varchar(255) NOT NULL,
   `file_name` varchar(255) NOT NULL,
@@ -275,7 +275,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `users_email_unique` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table simdes.users: ~2 rows (approximately)
+-- Dumping data for table simdes.users: ~3 rows (approximately)
 REPLACE INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
 	(1, 'Super Admin', 'superadmin@simdes.com', NULL, '$2y$10$Rh32XYhSGDgu8GZEG/0Q2.8j76C..ZSLE/CHRceBHKxevQqWIkBuq', NULL, '2022-11-09 04:34:56', NULL),
 	(2, 'Company 1', 'company1@simdes.com', NULL, '$2y$10$mltY3gPvqutBxj/QNvydIOetjouUkBnpW/bl.KfiKjAiYMOy1u9/q', NULL, '2022-11-09 11:36:39', NULL),

@@ -244,6 +244,7 @@
                     title: "Catatan",
                     headerAttributes: { style: "text-align: center" }
                 },
+                @if(auth()->user()->roles[0]->name == 'employee')
                 {
                     headerTemplate: "<span class='k-icon k-i-gear'></span>",
                     headerAttributes: { class: "table-header-cell", style: "text-align: center" },
@@ -267,16 +268,19 @@
                         }
                     ]
                 }
+                @endif
             ],
             dataBinding: function() {
                 record = (this.dataSource.page() -1) * this.dataSource.pageSize();
             },
             toolbar: [
+                @if(auth()->user()->roles[0]->name == 'employee')
                 {
                     name: "create",
                     text: "Tambah Data",
                     hidden: true
                 }
+                @endif
             ],
             edit: function (e) {
                 e.container.parent().find('.k-window-title').text(e.model.isNew() ? "Tambah Data" : "Edit Data");

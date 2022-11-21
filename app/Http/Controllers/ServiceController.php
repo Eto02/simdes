@@ -20,12 +20,19 @@ class ServiceController extends Controller
 
     public function getAll()
     {
-        $employee = MstrEmployee::where('user_id',auth()->user()->id)->first();
+        $user = auth()->user();
+        if ($user->roles[0]->name == 'superadmin') {
+            $trService = TrService::with('mstrServiceType')
+            ->orderBy('created_at','ASC')
+            ->get();
+        } else {
+            $employee = MstrEmployee::where('user_id',$user->id)->first();
 
-        $trService = TrService::with('mstrServiceType')
-        ->where('employee_id',$employee->employee_id)
-        ->orderBy('created_at','ASC')
-        ->get();
+            $trService = TrService::with('mstrServiceType')
+            ->where('employee_id',$employee->employee_id)
+            ->orderBy('created_at','ASC')
+            ->get();
+        }
 
         $data = [];
         $i = 0;

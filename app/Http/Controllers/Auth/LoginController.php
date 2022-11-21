@@ -41,7 +41,7 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        if (!$user->hasAnyRole('superadmin','company')) {
+        if (!$user->hasAnyRole('superadmin','employee')) {
             auth()->logout();
             return back()->with('warning', 'Maaf, Anda tidak mempunyai Role apapun di SIMDES.');
         }

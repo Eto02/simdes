@@ -79,7 +79,7 @@
                         </p>
                     </a>
                 </li>
-                @if (auth()->user()->roles[0]->name == 'employee')
+                @if (auth()->user()->roles[0]->name == 'superadmin' || auth()->user()->roles[0]->name == 'employee')
                 <li class="nav-item">
                     <a href="{{ route('service') }}" class="nav-link {{ $serviceActive }}">
                         <i class="nav-icon fas fa-edit"></i>

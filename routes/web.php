@@ -51,8 +51,8 @@ Route::group(['middleware' => ['role:superadmin']], function () {
     });
 });
 
-Route::group(['middleware' => ['role:employee']], function () {
-    
+Route::group(['middleware' => ['role:superadmin|employee']], function () {
+
     Route::controller(ServiceController::class)->group(function () {
         Route::get('service','index')->name('service');
         Route::get('service/get_all','getAll')->name('service.get_all');
@@ -73,7 +73,10 @@ Route::group(['middleware' => ['role:employee']], function () {
     Route::controller(ReportController::class)->group(function () {
         Route::get('report','index')->name('report');
     });
+});
 
+Route::group(['middleware' => ['role:employee']], function () {
+    
     Route::controller(ServiceTypeController::class)->group(function () {
         Route::get('service_type','index')->name('service_type');
         Route::get('service_type/get_all','getAll')->name('service_type.get_all');

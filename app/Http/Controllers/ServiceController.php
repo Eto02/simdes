@@ -59,7 +59,7 @@ class ServiceController extends Controller
             $name = $request->name;
             $serviceTypeId = $request->service_type_id;
             $letterNumber = $request->letter_number;
-            $servicedBy = $request->serviced_by;
+            // $servicedBy = $request->serviced_by;
             $notes = $request->notes;
 
             $employee = MstrEmployee::where('user_id',auth()->user()->id)->first();
@@ -70,7 +70,7 @@ class ServiceController extends Controller
                 'name' => $name,
                 'service_type_id' => $serviceTypeId,
                 'letter_number' => $letterNumber,
-                'serviced_by' => $servicedBy,
+                'serviced_by' => auth()->user()->name,
                 'notes' => $notes,
                 'created_by' => auth()->user()->email
             ]);
@@ -94,7 +94,7 @@ class ServiceController extends Controller
             $name = $request->name;
             $serviceTypeId = $request->service_type_id;
             $letterNumber = $request->letter_number;
-            $servicedBy = $request->serviced_by;
+            // $servicedBy = $request->serviced_by;
             $notes = $request->notes;
 
             TrService::where('service_id',$id)
@@ -103,7 +103,7 @@ class ServiceController extends Controller
                 'name' => $name,
                 'service_type_id' => $serviceTypeId,
                 'letter_number' => $letterNumber,
-                'serviced_by' => $servicedBy,
+                'serviced_by' => auth()->user()->name,
                 'notes' => $notes,
                 'updated_by' => auth()->user()->email
             ]);

@@ -20,7 +20,7 @@
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="{{ route('dashboard') }}"><b>SIMDES</b></a>
+            <a href="{{ route('dashboard') }}"><b id="app_name">-</b></a>
         </div>
         <!-- /.login-logo -->
         <div class="card">
@@ -108,5 +108,21 @@
     <!-- AdminLTE App -->
     <script src="{{ asset('lte/dist/js/adminlte.min.js') }}"></script>
 </body>
+
+<style>
+    body {
+        background-image: url("{{ route('view.settings') }}/login_background");
+        background-color: #cccccc;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+
+<script>
+    $.get("{{ route('view.settings') }}/app_name", function(data) {
+        $("#app_name").text(data);
+    });
+</script>
 
 </html>

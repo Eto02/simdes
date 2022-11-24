@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ModelHasRoles;
 use App\Models\MstrEmployee;
+use App\Models\User;
 use App\Models\Users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -34,14 +36,17 @@ class CompanyController extends Controller
 
         foreach ($users as $key => $value) {
             $data[$i]['no'] = $i + 1;
+            $data[$i]['user_id'] = $value->id;
             $data[$i]['name'] = $value->name;
             $data[$i]['email'] = $value->email;
             $data[$i]['employee_id'] = $value->mstrEmployee->employee_id;
             $data[$i]['employee_name'] = $value->mstrEmployee->name;
             $data[$i]['address'] = $value->mstrEmployee->address;
             $data[$i]['phone_number'] = $value->mstrEmployee->phone_number;
-            $data[$i]['logo'] = 'storage/'.$value->mstrEmployee->logo;
-            $data[$i]['login_background'] = 'storage/'.$value->mstrEmployee->login_background;
+            $data[$i]['logo'] = $value->mstrEmployee->logo;
+            $data[$i]['login_background'] = $value->mstrEmployee->login_background;
+            $data[$i]['logo_view'] = 'storage/'.$value->mstrEmployee->logo;
+            $data[$i]['login_background_view'] = 'storage/'.$value->mstrEmployee->login_background;
             $i++;
         }
 
@@ -60,11 +65,11 @@ class CompanyController extends Controller
             $employeeName = $request->employee_name;
             $address = $request->address;
             $phoneNumber = $request->phone_number;
-            $logo = $request->file('logo');
-            $loginBackground = $request->file('login_background');
+            $logo = $request->logo;
+            $loginBackground = $request->login_background;
 
             // Insert users
-            Users::create([
+            $user_id = Users::insertGetId([
                 'name' => $name,
                 'email' => $email,
                 'password' => Hash::make($password),
@@ -72,20 +77,30 @@ class CompanyController extends Controller
             ]);
 
             // Insert mstr_employee
-            $logoFilename = date('YmdHis').'_'.$logo->getClientOriginalName();
-            $logo->storeAs('public/'.$this->logoPath, $logoFilename);
-
-            $loginBackgroundFilename = date('YmdHis').'_'.$loginBackground->getClientOriginalName();
-            $loginBackground->storeAs('public/'.$this->loginBgPath, $loginBackgroundFilename);
-
-            MstrEmployee::create([
+            $companyInsertField = [
+                'user_id' => $user_id,
                 'name' => $employeeName,
                 'address' => $address,
                 'phone_number' => $phoneNumber,
-                'logo' => $logoFilename,
-                'login_background' => $loginBackgroundFilename,
                 'created_by' => auth()->user()->email
-            ]);
+            ];
+
+            if ($logo) {
+                $companyInsertField = array_merge($companyInsertField,['logo' => $logo]);
+            }
+            if ($loginBackground) {
+                $companyInsertField = array_merge($companyInsertField,['login_background' => $loginBackground]);
+            }
+
+            MstrEmployee::create($companyInsertField);
+
+            // ModelHasRoles::create([
+            //     'role_id' => 2,
+            //     'model_type' => 'App\Models\User',
+            //     'model_id' => $user_id
+            // ]);
+            $user = User::find($user_id);
+            $user->assignRole(['employee']);
 
             return response()->json([
                 'code' => 200,
@@ -111,8 +126,8 @@ class CompanyController extends Controller
             $employeeName = $request->employee_name;
             $address = $request->address;
             $phoneNumber = $request->phone_number;
-            $logo = $request->file('logo');
-            $loginBackground = $request->file('login_background');
+            $logo = $request->logo;
+            $loginBackground = $request->login_background;
 
             // Update users
             $usersFieldUpdate = [
@@ -134,16 +149,10 @@ class CompanyController extends Controller
                 'updated_by' => auth()->user()->email
             ];
             if ($logo) {
-                $logoFilename = date('YmdHis').'_'.$logo->getClientOriginalName();
-                $logo->storeAs('public/'.$this->logoPath, $logoFilename);
-
-                $mstrEmployeeFieldUpdate = array_merge($mstrEmployeeFieldUpdate,['logo' => $logoFilename]);
+                $mstrEmployeeFieldUpdate = array_merge($mstrEmployeeFieldUpdate,['logo' => $logo]);
             }
             if ($loginBackground) {
-                $loginBackgroundFilename = date('YmdHis').'_'.$loginBackground->getClientOriginalName();
-                $loginBackground->storeAs('public/'.$this->loginBgPath, $loginBackgroundFilename);
-
-                $mstrEmployeeFieldUpdate = array_merge($mstrEmployeeFieldUpdate,['login_background' => $loginBackgroundFilename]);
+                $mstrEmployeeFieldUpdate = array_merge($mstrEmployeeFieldUpdate,['login_background' => $loginBackground]);
             }
 
             MstrEmployee::where('user_id',$id)
@@ -177,6 +186,37 @@ class CompanyController extends Controller
             return response()->json([
                 'code' => 500,
                 'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function upload(Request $request, $type)
+    {
+        try {
+            if ($type == 'logo') {
+                // logo
+                $file = $request->file('logo');
+
+                $fileName = date('YmdHis').'_'.$file->getClientOriginalName();
+                $file->storeAs('public/'.$this->logoPath, $fileName);
+
+                $file_name = $this->logoPath.$fileName;
+            } else {
+                // login background
+                $file = $request->file('login_background');
+
+                $fileName = date('YmdHis').'_'.$file->getClientOriginalName();
+                $file->storeAs('public/'.$this->loginBgPath, $fileName);
+
+                $file_name = $this->loginBgPath.$fileName;
+            }
+
+            return response()->json([
+                'file_name' => $file_name
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'file_name' => null
             ]);
         }
     }

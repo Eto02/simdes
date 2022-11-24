@@ -2,9 +2,10 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="{{ route('dashboard') }}" class="brand-link">
-        <img src="{{ asset('lte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-            style="opacity: .8">
-        <span class="brand-text font-weight-light">SIMDES</span>
+        {{-- <img src="{{ asset('lte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+        <span class="brand-text font-weight-light">SIMDES</span> --}}
+        <img src="{{ route('view.settings') }}/logo" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light" id="app_name">-</span>
     </a>
 
     <!-- Sidebar -->
@@ -41,6 +42,7 @@
             $employeeActive = '';
             $serviceTypeActive = '';
             $fileTypeActive = '';
+            $settingsActive = '';
 
             switch ($currentRoute) {
                 case route('dashboard'):
@@ -60,6 +62,9 @@
                     break;
                 case route('file_type'):
                     $fileTypeActive = 'active';
+                    break;
+                case route('settings'):
+                    $settingsActive = 'active';
                     break;
                 default:
                     break;
@@ -88,6 +93,8 @@
                         </p>
                     </a>
                 </li>
+                @endif
+                @if (auth()->user()->roles[0]->name == 'superadmin')
                 <li class="nav-item">
                     <a href="{{ route('report') }}" class="nav-link {{ $reportActive }}">
                         <i class="nav-icon fas fa-print"></i>
@@ -136,6 +143,14 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('settings') }}" class="nav-link {{ $settingsActive }}">
+                        <i class="nav-icon fas fa-cog"></i>
+                        <p>
+                            Settings
+                        </p>
+                    </a>
+                </li>
                 @endif
                 @if (auth()->user()->roles[0]->name == 'employee')
                 <li class="nav-item">
@@ -161,3 +176,9 @@
     </div>
     <!-- /.sidebar -->
 </aside>
+
+<script>
+    $.get("{{ route('view.settings') }}/app_name", function(data) {
+        $("#app_name").text(data);
+    });
+</script>

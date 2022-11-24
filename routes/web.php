@@ -8,6 +8,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServiceFileController;
 use App\Http\Controllers\ServiceTypeController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(ViewController::class)->group(function () {
     Route::get('view/logo/{id?}','logo')->name('view.logo');
+
+    Route::get('view/settings/{key?}','settings')->name('view.settings');
 });
 
 Route::controller(DropdownController::class)->group(function () {
@@ -48,6 +51,25 @@ Route::group(['middleware' => ['role:superadmin']], function () {
         Route::post('employee/store', 'store')->name('employee.store');
         Route::put('employee/update/{id?}', 'update')->name('employee.update');
         Route::delete('employee/destroy/{id?}', 'destroy')->name('employee.destroy');
+
+        Route::post('employee/upload/{type?}', 'upload')->name('employee.upload');
+    });
+
+    Route::controller(ReportController::class)->group(function () {
+        Route::get('report','index')->name('report');
+        Route::get('report/get_data','getData')->name('report.get_data');
+        Route::get('report/print','print')->name('report.print');
+
+        Route::get('report/base64url_encode','base64url_encode')->name('report.base64url_encode');
+        Route::get('report/base64url_decode','base64url_decode')->name('report.base64url_decode');
+    });
+
+    Route::controller(SettingsController::class)->group(function () {
+        Route::get('settings','index')->name('settings');
+        Route::get('settings/get_all','getAll')->name('settings.get_all');
+        Route::put('settings/update/{key?}', 'update')->name('settings.update');
+
+        Route::post('settings/upload/{key?}', 'upload')->name('settings.upload');
     });
 });
 
@@ -68,10 +90,6 @@ Route::group(['middleware' => ['role:superadmin|employee']], function () {
         Route::delete('service_file/destroy/{id?}', 'destroy')->name('service_file.destroy');
 
         Route::post('service_file/upload', 'upload')->name('service_file.upload');
-    });
-
-    Route::controller(ReportController::class)->group(function () {
-        Route::get('report','index')->name('report');
     });
 });
 

@@ -80,7 +80,7 @@
 
 <link href="{{ asset('kendo/styles/kendo.default-v2.min.css') }}" rel="stylesheet">
 
-<script src="{{ asset('kendo/js/jquery.min.js') }}"></script>
+{{-- <script src="{{ asset('kendo/js/jquery.min.js') }}"></script> --}}
 
 <script src="{{ asset('kendo/js/kendo.all.min.js') }}"></script>
 

@@ -53,11 +53,10 @@
     </div>
 
     <div class="k-edit-label">
-        <label for="password">Password <i class="text-danger">*</i></label>
+        <label for="password">Password</label>
     </div>
     <div data-container-for="password" class="k-edit-field">
-        <input type="text" class="k-input k-textbox" name="password" style="width: 100%" required="required" data-bind="value:password" validationMessage="Field tidak boleh kosong">
-        <span class="k-invalid-msg" data-for="password"></span>
+        <input type="text" class="k-input k-textbox" name="password" style="width: 100%" data-bind="value:password">
     </div>
 
     <div class="k-edit-label">
@@ -69,11 +68,11 @@
     </div>
 
     <div class="k-edit-label">
-        <label for="Alamat_Pengirim">Alamat Pengirim <i class="text-danger">*</i></label>
+        <label for="address">Alamat <i class="text-danger">*</i></label>
     </div>
-    <div data-container-for="Alamat_Pengirim" class="k-edit-field">
-        <textarea type="text" class="k-input k-textbox" style="min-height: 80px" name="Alamat_Pengirim" required="required" data-bind="value:Alamat_Pengirim" validationMessage="Field tidak boleh kosong"></textarea>
-        <span class="k-invalid-msg" data-for="Alamat_Pengirim"></span>
+    <div data-container-for="address" class="k-edit-field">
+        <textarea type="text" class="k-input k-textbox" style="min-height: 80px" name="address" required="required" data-bind="value:address" validationMessage="Field tidak boleh kosong"></textarea>
+        <span class="k-invalid-msg" data-for="address"></span>
     </div>
 
     <div class="k-edit-label">
@@ -85,7 +84,7 @@
     </div>
 
     <div class="k-edit-label">
-        <label for="logo">Logo <i class="text-danger">*</i></label>
+        <label for="logo">Logo</label>
     </div>
     <div data-container-for="logo" class="k-edit-field">
         <input type="file" name="logo" id="logo" aria-label="logo">
@@ -100,7 +99,7 @@
     </div>
 
     <div class="k-edit-label">
-        <label for="login_background">Background Login <i class="text-danger">*</i></label>
+        <label for="login_background">Background Login</label>
     </div>
     <div data-container-for="login_background" class="k-edit-field">
         <input type="file" name="login_background" id="login_background" aria-label="login_background">
@@ -156,7 +155,7 @@
                         headers: {
                             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
                         },
-                        url: "{{ route('employee.update') }}/"+options.data.employee_id,
+                        url: "{{ route('employee.update') }}/"+options.data.user_id,
                         type: "PUT",
                         data: options.data,
                         dataType: "json",
@@ -173,7 +172,7 @@
                 data: "data",
                 total: "recordsTotal",
                 model: {
-                    id: "employee_id",
+                    id: "user_id",
                 },
             },
             pageSize: 10
@@ -206,6 +205,7 @@
                 {
                     field: "address",
                     title: "Alamat",
+                    width: 100,
                     headerAttributes: { style: "text-align: center" }
                 },
                 {
@@ -216,14 +216,18 @@
                 },
                 {
                     template: function(data) {
-                        return '<div class="text-center"><a href="'+data.logo+'" target="_blank"><img src="'+data.logo+'" alt="Logo" width="60" height="60"></a></div>';
+                        return '<div class="text-center"><a href="'+data.logo_view+'" target="_blank"><img src="'+data.logo_view+'" width="60" height="60"></a></div>';
                     },
                     title: "Logo",
+                    width: 80,
                     headerAttributes: { style: "text-align: center" }
                 },
                 {
-                    field: "",
+                    template: function(data) {
+                        return '<div class="text-center"><a href="'+data.login_background_view+'" target="_blank"><img src="'+data.login_background_view+'" width="60"></a></div>';
+                    },
                     title: "Background",
+                    width: 100,
                     headerAttributes: { style: "text-align: center" }
                 },
                 {
@@ -268,24 +272,47 @@
                     validation.allowedExtensions = ["png","jpg","jpeg"]
                     $("#logo").kendoUpload({
                         async: {
-                            saveUrl: "",
+                            saveUrl: "{{ route('employee.upload') }}/logo",
                             autoUpload: false
                         },
                         multiple: false,
                         validation: validation,
                         dropZone: ".logoDropZoneElement",
+                        upload: onUpload,
+                        success: function(e2) {
+                            e.model.logo = e2.response.file_name;
+                            // employeeDataSource.sync();
+                        },
                     }).data("kendoUpload");
 
                     $("#login_background").kendoUpload({
                         async: {
-                            saveUrl: "",
+                            saveUrl: "{{ route('employee.upload') }}/login_background",
                             autoUpload: false
                         },
                         multiple: false,
                         validation: validation,
                         dropZone: ".loginBackgroundDropZoneElement",
+                        upload: onUpload,
+                        success: function(e2) {
+                            e.model.login_background = e2.response.file_name;
+                            employeeDataSource.sync();
+                        },
                     }).data("kendoUpload");
                 };
+
+                function onUpload(e) {
+                    var token = $('meta[name="csrf-token"]').attr('content');  
+                    var xhr = e.XMLHttpRequest;
+                    if (xhr) {
+                        xhr.addEventListener("readystatechange", function (e) {
+                            if (xhr.readyState == 1 /* OPENED */) {
+                                xhr.setRequestHeader("X-CSRF-TOKEN", token);
+                            }
+                        });
+                    }
+                }
+
                 initUpload();
             },
             noRecords: true,
@@ -299,6 +326,16 @@
             editable: {
                 mode: "popup",
                 template: $("#editPopupTemplate").html()
+            },
+            save: function(e) {
+                if (!$("[name='logo']").closest(".k-upload").hasClass("k-upload-empty")) {
+                    e.preventDefault();
+                    $("#logo").data("kendoUpload").upload();
+                }
+                if (!$("[name='login_background']").closest(".k-upload").hasClass("k-upload-empty")) {
+                    e.preventDefault();
+                    $("#login_background").data("kendoUpload").upload();
+                }
             }
         });
 
@@ -367,6 +404,9 @@
         color: #c7c7c7;
         text-transform: uppercase;
         font-size: 12px;
+    }
+    .k-clear-selected, .k-upload-selected{
+        display: none !important;
     }
 </style>
 

@@ -79,13 +79,13 @@
         <input type="text" class="k-input k-textbox" name="letter_number" style="width: 100%" data-bind="value:letter_number">
     </div>
 
-    <div class="k-edit-label">
+    {{-- <div class="k-edit-label">
         <label for="serviced_by">Dilayani Oleh <i class="text-danger">*</i></label>
     </div>
     <div data-container-for="serviced_by" class="k-edit-field">
         <input type="text" class="k-input k-textbox" name="serviced_by" style="width: 100%" required="required" data-bind="value:serviced_by" validationMessage="Field tidak boleh kosong">
         <span class="k-invalid-msg" data-for="serviced_by"></span>
-    </div>
+    </div> --}}
 
     <div class="k-edit-label">
         <label for="notes">Catatan</label>
@@ -623,6 +623,9 @@
         color: #c7c7c7;
         text-transform: uppercase;
         font-size: 12px;
+    }
+    .k-clear-selected, .k-upload-selected{
+        display: none !important;
     }
 </style>
 

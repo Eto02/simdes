@@ -85,8 +85,8 @@ CREATE TABLE IF NOT EXISTS `mstr_employee` (
   `name` varchar(255) NOT NULL,
   `address` text NOT NULL,
   `phone_number` varchar(15) NOT NULL,
-  `logo` varchar(255) NOT NULL,
-  `login_background` varchar(255) NOT NULL,
+  `logo` varchar(255) DEFAULT NULL,
+  `login_background` varchar(255) DEFAULT NULL,
   `created_by` varchar(50) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_by` varchar(50) DEFAULT NULL,
@@ -98,8 +98,8 @@ CREATE TABLE IF NOT EXISTS `mstr_employee` (
 
 -- Dumping data for table simdes.mstr_employee: ~2 rows (approximately)
 REPLACE INTO `mstr_employee` (`employee_id`, `user_id`, `name`, `address`, `phone_number`, `logo`, `login_background`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
-	('4d30cb5b-6023-11ed-90eb-a81e84c072fd', 2, 'Company 1', 'Jl. Pattimura No.20, Lumajang, Jawa Timur', '081222333444', 'company/logo/20221109183900_logo.png', 'company/login_background/20221109183900_loginbg.png', 'superadmin@simdes.com', '2022-11-09 11:40:18', NULL, NULL),
-	('94b8ba7d-6023-11ed-90eb-a81e84c072fd', 3, 'Company 2', 'Jl. Ir. Soekarno No.25, Lumajang, Jawa Timur', '081222333555', 'company/logo/20221109184100_logo.png', 'company/login_background/20221109184100_loginbg.png', 'superadmin@simdes.com', '2022-11-09 11:42:19', NULL, NULL);
+	('4d30cb5b-6023-11ed-90eb-a81e84c072fd', 2, 'Company 1', 'Jl. Pattimura No.20, Lumajang, Jawa Timur', '081222333444', 'employee/logo/20221109183900_logo.png', 'employee/login_background/20221109183900_loginbg.png', 'superadmin@simdes.com', '2022-11-09 11:40:18', NULL, '2022-11-24 04:52:24'),
+	('94b8ba7d-6023-11ed-90eb-a81e84c072fd', 3, 'Company 2', 'Jl. Ir. Soekarno No.25, Lumajang, Jawa Timur', '081222333555', 'employee/logo/20221109184100_logo.png', 'employee/login_background/20221109184100_loginbg.png', 'superadmin@simdes.com', '2022-11-09 11:42:19', NULL, '2022-11-24 04:52:26');
 
 -- Dumping structure for table simdes.mstr_file_type
 CREATE TABLE IF NOT EXISTS `mstr_file_type` (
@@ -142,6 +142,26 @@ REPLACE INTO `mstr_service_type` (`service_type_id`, `employee_id`, `name`, `des
 	('0ebc0ce7-641f-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', 'Perubahan Data Kartu Keluarga', 'Ini adalah contoh deskripsi perubahan data kartu keluarga.', 'company1@simdes.com', '2022-11-14 13:19:58', NULL, NULL),
 	('c6255a04-641e-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', 'Pembuatan KTP', 'Ini adalah contoh deskripsi pembuatan ktp.', 'company1@simdes.com', '2022-11-14 13:17:56', NULL, NULL),
 	('d576b6b5-641e-11ed-8526-a81e84c072fd', '4d30cb5b-6023-11ed-90eb-a81e84c072fd', 'Lapor Pemerintah Desa', 'Ini adalah contoh deskripsi lapor pemerintah desa.', 'company1@simdes.com', '2022-11-14 13:18:22', NULL, NULL);
+
+-- Dumping structure for table simdes.mstr_settings
+CREATE TABLE IF NOT EXISTS `mstr_settings` (
+  `key` varchar(255) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `type` enum('text','file') NOT NULL,
+  `created_by` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_by` varchar(50) DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Dumping data for table simdes.mstr_settings: ~3 rows (approximately)
+REPLACE INTO `mstr_settings` (`key`, `value`, `description`, `type`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
+	('app_name', 'SIMDES', NULL, 'text', 'superadmin@simdes.com', '2022-11-22 04:51:40', 'superadmin@simdes.com', '2022-11-22 07:52:04'),
+	('cop', 'settings/cop.png', NULL, 'file', 'superadmin@simdes.com', '2022-11-22 05:08:29', NULL, NULL),
+	('login_background', 'settings/login_background.jpg', NULL, 'file', 'superadmin@simdes.com', '2022-11-22 05:08:10', NULL, NULL),
+	('logo', 'settings/logo.png', 'Ini adalah contoh deskripsi logo', 'file', 'superadmin@simdes.com', '2022-11-22 05:08:20', 'superadmin@simdes.com', '2022-11-22 07:52:11');
 
 -- Dumping structure for table simdes.password_resets
 CREATE TABLE IF NOT EXISTS `password_resets` (
@@ -258,8 +278,8 @@ CREATE TABLE IF NOT EXISTS `tr_service_file` (
 
 -- Dumping data for table simdes.tr_service_file: ~2 rows (approximately)
 REPLACE INTO `tr_service_file` (`service_file_id`, `service_id`, `file_type_id`, `file_name`, `file_location`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
-	('36f57b36-64b4-11ed-bd8f-a81e84c072fd', 'ba3056aa-6431-11ed-8526-a81e84c072fd', 'a4853a21-6415-11ed-8526-a81e84c072fd', 'company/service_file/20221115070747_Test Berkas 1.pdf', 'A1-002', 'company1@simdes.com', '2022-11-15 07:07:49', NULL, NULL),
-	('5e54b795-64ab-11ed-8526-a81e84c072fd', 'ba3056aa-6431-11ed-8526-a81e84c072fd', '9e005c4c-6415-11ed-8526-a81e84c072fd', 'company/service_file/20221115070457_Test Berkas 1.pdf', 'A1-001', 'company1@simdes.com', '2022-11-15 06:04:12', 'company1@simdes.com', '2022-11-15 07:05:57');
+	('36f57b36-64b4-11ed-bd8f-a81e84c072fd', 'ba3056aa-6431-11ed-8526-a81e84c072fd', 'a4853a21-6415-11ed-8526-a81e84c072fd', 'employee/service_file/20221115070747_Test Berkas 1.pdf', 'A1-002', 'company1@simdes.com', '2022-11-15 07:07:49', NULL, '2022-11-24 01:52:14'),
+	('5e54b795-64ab-11ed-8526-a81e84c072fd', 'ba3056aa-6431-11ed-8526-a81e84c072fd', '9e005c4c-6415-11ed-8526-a81e84c072fd', 'employee/service_file/20221115070457_Test Berkas 1.pdf', 'A1-001', 'company1@simdes.com', '2022-11-15 06:04:12', 'company1@simdes.com', '2022-11-24 01:52:11');
 
 -- Dumping structure for table simdes.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -273,7 +293,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table simdes.users: ~3 rows (approximately)
 REPLACE INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
